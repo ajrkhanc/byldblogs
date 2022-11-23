@@ -6,6 +6,7 @@ var cookie = require('cookie-parser');
 var config = require('../../config');
 var Feedback = require('../models/feedback');
 var Jobform = require('../models/jobform');
+var Becomeaprofessionalcoach = require('../models/become-a-professional-coach');
 var cors = require('cors');
 const formidable = require('formidable');
 const path = require('path');
@@ -34,6 +35,74 @@ module.exports = function (express) {
       }
     });
   });
+
+
+  // become a Professional Coach Assessement
+  apiRouter.route('/become-a-professional-coach/')
+  .post(function (req, res) {
+    console.log(req.body)
+    Post.findOne({ url: req.body.posturl }, function (err, post) {
+      if (err) { console.log(err) }
+      var BecomeAprofessionalcoach = new Becomeaprofessionalcoach({       
+        q1: req.body.q1,
+        q2: req.body.q2,
+        q3: req.body.q3,
+        q4: req.body.q4,
+        q5: req.body.q5,
+        q6: req.body.q6,
+        q7: req.body.q7,
+        q8: req.body.q8,
+        q9: req.body.q9,
+        q10: req.body.q10,       
+        name:req.body.name,
+        email:req.body.email,
+        phone:req.body.phone,
+        organization:req.body.organization,
+        newnameurl:req.body.newnameurl
+
+      });
+      BecomeAprofessionalcoach.save(function (err) {
+        if (err) {
+          console.log(err)
+        } else {
+          return res.json({ message: 'Assesment Saved' });
+        }
+      });
+    });
+  })
+
+  // become a Professional Coach result
+  apiRouter.get('/become-a-professional-coach', function (req, res) {
+    Becomeaprofessionalcoach.find({}, function (err, categories) {
+      if (err) {
+        res.status(500).json({
+          error: 'Could not retrieve categories'
+        });
+      }
+      else {
+        categories = categories.reverse()
+        res.json(categories);
+      }
+    });
+  });
+
+       // become a Professional Coach result by user
+       apiRouter.get('/become-a-professional-coach/:username', function (req, res) {
+        // get all posts from database
+        Becomeaprofessionalcoach.find({
+          newnameurl: req.params.username
+        }, function (err, posts) {
+          if (err) {
+            res.status(500).json({
+              error: 'Could not retrieve posts'
+            });
+          }
+          else {
+            posts = posts.reverse();
+            res.json(posts);
+          }
+        });
+      });
 
 
   // get all categories
