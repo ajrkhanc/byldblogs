@@ -19,7 +19,7 @@
         <td><%= p.Author %></td>
         <td><%= p.ModifiedDate %></td>
         <td><a class="btn btn-primary" href="/controlpanel/posts/edit/<%= p._id %>">Edit</a></td>
-        <!-- <td><a class="btn btn-primary postdelete" href="/controlpanel/posts/delete/<%= p._id %>">Delete</a></td> -->
+        <td><a class="btn btn-primary postdelete" href="/controlpanel/posts/delete/<%= p._id %>">Delete</a></td>
         <%if(p.isPublished == '0'){%>
         <td><a class="btn btn-primary" href="/controlpanel/posts/publish/<%= p.posturl %>">Publish Post</a></td>
         <%}else if(p.isPublished == '1'){%>
@@ -61,23 +61,4 @@
         </ul>
     <% } %>
 </div>
-<script   src="/js/jquery-3.0.0.min.js"></script>
-<script>
-$('.postdelete').click(function(event){
-        event.preventDefault();
-        var c = window.confirm('Are You sure');
-        if(c){
-            $.ajax({
-            type:'POST',
-            url:$('.postdelete').attr('href')
-            }).always(function(){
-                window.location.href= '/controlpanel/posts';
-            }).fail(function(err){
-                console.log(err);
-            });
-            
-        }
-    });
-        
-</script>
 <% include ./_cpanelFooter.ejs%>

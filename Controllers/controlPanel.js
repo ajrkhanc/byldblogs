@@ -337,16 +337,12 @@ module.exports = function (express) {
         }
         );
         
-    app.post('/posts/delete/:id', function (req, res) {
-        Post.findOne({ _id: req.params.id }, function (err, post) {
-            if (err) { console.log(err) }
-            post.isPublished = '2';
-            post.save(function (err) {
-                if (err) { console.log(err) }
+        app.get('/posts/delete/:id', function (req, res) {
+            Post.findOneAndRemove({ _id: req.params.id }, function (err) {
+                if (err) throw err;
                 return res.redirect('/controlpanel/posts');
             });
         });
-    });
 
 
     app.get('/tags', function (req, res) {
