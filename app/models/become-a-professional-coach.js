@@ -15,10 +15,15 @@ var Becomeaprofessionalcoach = new Schema({
     q9: String,
     q10: String,   
     name: String,
-    email: String,
+    email:{
+      type: String,
+      required: true,
+      unique: true
+  },
     phone: String,
     organization: String,
-    newnameurl: String
+    newnameurl: String,
+    PublishDate: Date
   
   });
 
