@@ -27,6 +27,8 @@ var Becomeaprofessionalcoach = new Schema({
   
   });
 
+  Becomeaprofessionalcoach.plugin(uniqueValidator);
+
 
 module.exports = mongoose.model('becomeaprofessionalcoachtbl', Becomeaprofessionalcoach);
 
