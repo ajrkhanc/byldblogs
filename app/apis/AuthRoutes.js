@@ -61,15 +61,21 @@ module.exports = function (express) {
         newnameurl:req.body.newnameurl
 
       });
-      BecomeAprofessionalcoach.save(function (err) {
-        if (err) {
-          console.log(err)
+      Becomeaprofessionalcoach.findOne({ email: req.body.email }, function (err, existingDoc) {
+        if (existingDoc) {
+          return res.json({ message: 'Email is already registered', status: 1 });
         } else {
-          return res.json({ message: 'Assesment Saved' });
+          BecomeAprofessionalcoach.save(function (err) {
+            if (err) {
+              console.log(err)
+            } else {
+              return res.json({ message: 'Fetching your result', status: 0 });
+            }
+          });
         }
       });
     });
-  })
+  });
 
   // become a Professional Coach result
   apiRouter.get('/become-a-professional-coach', function (req, res) {
