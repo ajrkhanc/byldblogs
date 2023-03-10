@@ -23,7 +23,7 @@ var Becomeaprofessionalcoach = new Schema({
     phone: String,
     organization: String,
     newnameurl: String,
-    created_at    : { type: Date, required: true, default: Date.now }
+    created_at: { type: Date, required: true, default: Date.now }
   
   });
 
