@@ -7,6 +7,7 @@ var config = require('../../config');
 var Feedback = require('../models/feedback');
 var Jobform = require('../models/jobform');
 var Becomeaprofessionalcoach = require('../models/become-a-professional-coach');
+var CPassessmetscc = require ('../models/cp-assessment');
 var cors = require('cors');
 const formidable = require('formidable');
 const path = require('path');
@@ -35,6 +36,82 @@ module.exports = function (express) {
       }
     });
   });
+
+
+  // CP Assessement
+  apiRouter.route('/cp-assessment/')
+  .post(function (req, res) {
+    console.log(req.body)
+    Post.findOne({ url: req.body.posturl }, function (err, post) {
+      if (err) { console.log(err) }
+      var CPAssessmetscc = new CPassessmetscc({       
+        q1: req.body.q1,
+        q2: req.body.q2,
+        q3: req.body.q3,
+        q4: req.body.q4,
+        q5: req.body.q5,
+        q6: req.body.q6,
+        q7: req.body.q7,
+        q8: req.body.q8,
+        q9: req.body.q9,
+        q10: req.body.q10,       
+        name:req.body.name,
+        email:req.body.email,
+        phone:req.body.phone,
+        organization:req.body.organization,
+        newnameurl:req.body.newnameurl
+
+      });
+      CPassessmetscc.findOne({ email: req.body.email }, function (err, existingDoc) {
+        if (existingDoc) {
+          return res.json({ message: 'Email is already registered', status: 1 });
+        } else {
+          CPAssessmetscc.save(function (err) {
+            if (err) {
+              console.log(err)
+            } else {
+              return res.json({ message: 'Fetching your result', status: 0 });
+            }
+          });
+        }
+      });
+    });
+  });
+
+  // CP Assessment result
+  apiRouter.get('/cp-assessment', function (req, res) {
+    CPassessmetscc.find({}, function (err, categories) {
+      if (err) {
+        res.status(500).json({
+          error: 'Could not retrieve categories'
+        });
+      }
+      else {
+        categories = categories.reverse()
+        res.json(categories);
+      }
+    });
+  });
+
+       // CP Assessment result by user
+       apiRouter.get('/cp-assessment/:username', function (req, res) {
+        // get all posts from database
+        CPassessmetscc.find({
+          newnameurl: req.params.username
+        }, function (err, posts) {
+          if (err) {
+            res.status(500).json({
+              error: 'Could not retrieve posts'
+            });
+          }
+          else {
+            posts = posts.reverse();
+            res.json(posts);
+          }
+        });
+      });
+
+
 
 
   // become a Professional Coach Assessement
