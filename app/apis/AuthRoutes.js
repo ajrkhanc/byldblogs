@@ -10,6 +10,8 @@ var Becomeaprofessionalcoach = require('../models/become-a-professional-coach');
 var CPassessmetscc = require ('../models/cp-assessment');
 var Bespokeass = require ('../models/bespoke-assessment');
 var DTCIAssessment = require ('../models/dtci-assessment');
+var TRAiningAssessment = require ('../models/training-assessment');
+
 var cors = require('cors');
 const formidable = require('formidable');
 const path = require('path');
@@ -38,6 +40,139 @@ module.exports = function (express) {
       }
     });
   });
+
+
+// Training Assessement
+apiRouter.route('/training-assessment/')
+.post(function (req, res) {
+  console.log(req.body)
+  Post.findOne({ url: req.body.posturl }, function (err, post) {
+    if (err) { console.log(err) }
+    var TRainingAssessment = new TRAiningAssessment({       
+      q1: req.body.q1,
+      q2: req.body.q2,
+      q3: req.body.q3,
+      q4: req.body.q4,
+      q5: req.body.q5,
+      q6: req.body.q6,
+      q7: req.body.q7,
+      q8: req.body.q8,
+      q9: req.body.q9,
+      q10: req.body.q10,
+      q11: req.body.q11,
+      q12: req.body.q12,
+      q13: req.body.q13,
+      q14: req.body.q14,
+      q15: req.body.q15,
+      q16: req.body.q16,
+      q17: req.body.q17,
+      q18: req.body.q18,
+      q19: req.body.q19,
+      q20: req.body.q20,
+      q21: req.body.q21,
+      q22: req.body.q22,
+      q23: req.body.q23,
+      q24: req.body.q24,
+      q25: req.body.q25,
+      q26: req.body.q26,
+      q27: req.body.q27,
+      q28: req.body.q28,
+      q29: req.body.q29,
+      q30: req.body.q30,
+      q31: req.body.q31,
+      q32: req.body.q32,
+      q33: req.body.q33,
+      q34: req.body.q34,
+      q35: req.body.q35,
+      q36: req.body.q36,
+      q37: req.body.q37,
+      q38: req.body.q38,
+      q39: req.body.q39,
+      q40: req.body.q40,
+      q41: req.body.q41,
+      q42: req.body.q42,
+      q43: req.body.q43,
+      q44: req.body.q44,
+      q45: req.body.q45,
+      q46: req.body.q46,
+      q47: req.body.q47,
+      q48: req.body.q48,
+      q49: req.body.q49,
+      q50: req.body.q50,
+      q51: req.body.q51,
+      q52: req.body.q52,
+      q53: req.body.q53,
+      q54: req.body.q54,
+      q55: req.body.q55,
+    
+
+      name:req.body.name,
+      email:req.body.email,
+      phone:req.body.phone,
+      organization:req.body.organization,
+      newnameurl:req.body.newnameurl
+
+    });
+    TRAiningAssessment.findOne({ email: req.body.email }, function (err, existingDoc) {
+      if (existingDoc) {
+        return res.json({ message: 'Email is already registered', status: 1 });
+      } else {
+        TRainingAssessment.save(function (err) {
+          if (err) {
+            console.log(err)
+          } else {
+            return res.json({ message: 'Fetching your result', status: 0 });
+          }
+        });
+      }
+    });
+  });
+});
+
+// Training Assessment result
+apiRouter.get('/training-assessment', function (req, res) {
+  TRAiningAssessment.find({}, function (err, categories) {
+    if (err) {
+      res.status(500).json({
+        error: 'Could not retrieve categories'
+      });
+    }
+    else {
+      categories = categories.reverse()
+      res.json(categories);
+    }
+  });
+});
+
+     // Training Assessment result by user
+     apiRouter.get('/training-assessment/:username', function (req, res) {
+      // get all posts from database
+      TRAiningAssessment.find({
+        newnameurl: req.params.username
+      }, function (err, posts) {
+        if (err) {
+          res.status(500).json({
+            error: 'Could not retrieve posts'
+          });
+        }
+        else {
+          posts = posts.reverse();
+          res.json(posts);
+        }
+      });
+    });
+
+
+
+
+
+
+
+
+
+
+
+
 
 // DTCI Assessement
 apiRouter.route('/dtci-assessment/')
