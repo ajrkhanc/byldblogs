@@ -11,6 +11,7 @@ var CPassessmetscc = require ('../models/cp-assessment');
 var Bespokeass = require ('../models/bespoke-assessment');
 var DTCIAssessment = require ('../models/dtci-assessment');
 var TRAiningAssessment = require ('../models/training-assessment');
+var ECFASsessment = require ('../models/efc-assessment');
 
 var cors = require('cors');
 const formidable = require('formidable');
@@ -40,6 +41,183 @@ module.exports = function (express) {
       }
     });
   });
+
+
+  // ECF Assessement
+apiRouter.route('/efc-assessment/')
+.post(function (req, res) {
+  console.log(req.body)
+  Post.findOne({ url: req.body.posturl }, function (err, post) {
+    if (err) { console.log(err) }
+    var ECFASSessment = new ECFASsessment({       
+      q1: req.body.q1,
+      q2: req.body.q2,
+      q3: req.body.q3,
+      q4: req.body.q4,
+      q5: req.body.q5,
+      q6: req.body.q6,
+      q7: req.body.q7,
+      q8: req.body.q8,
+      q9: req.body.q9,
+      q10: req.body.q10,
+      q11: req.body.q11,
+      q12: req.body.q12,
+      q13: req.body.q13,
+      q14: req.body.q14,
+      q15: req.body.q15,
+      q16: req.body.q16,
+      q17: req.body.q17,
+      q18: req.body.q18,
+      q19: req.body.q19,
+      q20: req.body.q20,
+      q21: req.body.q21,
+      q22: req.body.q22,
+      q23: req.body.q23,
+      q24: req.body.q24,
+      q25: req.body.q25,
+      q26: req.body.q26,
+      q27: req.body.q27,
+      q28: req.body.q28,
+      q29: req.body.q29,
+      q30: req.body.q30,
+      q31: req.body.q31,
+      q32: req.body.q32,
+      q33: req.body.q33,
+      q34: req.body.q34,
+      q35: req.body.q35,
+      q36: req.body.q36,
+      q37: req.body.q37,
+      q38: req.body.q38,
+      q39: req.body.q39,
+      q40: req.body.q40,
+      q41: req.body.q41,
+      q42: req.body.q42,
+      q43: req.body.q43,
+      q44: req.body.q44,
+      q45: req.body.q45,
+      q46: req.body.q46,
+      q47: req.body.q47,
+      q48: req.body.q48,
+      q49: req.body.q49,
+      q50: req.body.q50,
+      q51: req.body.q51,
+      q52: req.body.q52,
+      q53: req.body.q53,
+      q54: req.body.q54,
+      q55: req.body.q55,
+      q56: req.body.q56,
+      q57: req.body.q57,
+      q58: req.body.q58,
+      q59: req.body.q59,
+      q60: req.body.q60,
+      q61: req.body.q61,
+      q62: req.body.q62,
+      q63: req.body.q63,
+      q64: req.body.q64,
+      q65: req.body.q65,
+      q66: req.body.q66,
+      q67: req.body.q67,
+      q68: req.body.q68,
+      q69: req.body.q69,
+      q70: req.body.q70,
+      q71: req.body.q71,
+      q72: req.body.q72,
+      q73: req.body.q73,
+      q74: req.body.q74,
+      q75: req.body.q75,
+      q76: req.body.q76,
+      q77: req.body.q77,
+      q78: req.body.q78,
+      q79: req.body.q79,
+      q80: req.body.q80,
+      q81: req.body.q81,
+      q82: req.body.q82,
+      q83: req.body.q83,
+      q84: req.body.q84,
+      q85: req.body.q85,
+      q86: req.body.q86,
+      q87: req.body.q87,
+      name:req.body.name,
+      email:req.body.email,      
+      organization:req.body.organization,
+
+      pname:req.body.pname,
+      yrole:req.body.yrole,
+      startd:req.body.startd,
+      completed:req.body.completed,
+      
+      newnameurl:req.body.newnameurl
+
+    });
+    ECFASsessment.findOne({ email: req.body.email }, function (err, existingDoc) {
+      if (existingDoc) {
+        return res.json({ message: 'Email is already registered', status: 1 });
+      } else {
+        ECFASSessment.save(function (err) {
+          if (err) {
+            console.log(err)
+          } else {
+            return res.json({ message: 'Fetching your result', status: 0 });
+          }
+        });
+      }
+    });
+  });
+});
+
+// ECF Assessment result
+apiRouter.get('/efc-assessment', function (req, res) {
+  ECFASsessment.find({}, function (err, categories) {
+    if (err) {
+      res.status(500).json({
+        error: 'Could not retrieve categories'
+      });
+    }
+    else {
+      categories = categories.reverse()
+      res.json(categories);
+    }
+  });
+});
+
+     // ECF Assessment result by user
+     apiRouter.get('/efc-assessment/:username', function (req, res) {
+      // get all posts from database
+      ECFASsessment.find({
+        newnameurl: req.params.username
+      }, function (err, posts) {
+        if (err) {
+          res.status(500).json({
+            error: 'Could not retrieve posts'
+          });
+        }
+        else {
+          posts = posts.reverse();
+          res.json(posts);
+        }
+      });
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Training Assessement
@@ -161,17 +339,6 @@ apiRouter.get('/training-assessment', function (req, res) {
         }
       });
     });
-
-
-
-
-
-
-
-
-
-
-
 
 
 // DTCI Assessement
