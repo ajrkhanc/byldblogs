@@ -104,6 +104,7 @@ var EcfAssessment = new Schema({
     yrole: String,
     startd: String,
     completed: String,
+    initiative: String,
 
     newnameurl: String,
     created_at: { type: Date, required: true, default: Date.now }

@@ -145,6 +145,7 @@ apiRouter.route('/efc-assessment/')
       yrole:req.body.yrole,
       startd:req.body.startd,
       completed:req.body.completed,
+      initiative:req.body.initiative,
       
       newnameurl:req.body.newnameurl
 
