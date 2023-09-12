@@ -112,7 +112,7 @@ app.get('/signup', function (req, res) {
     if (req.cookies.token) {
         return res.render('signup', { cats: cats });
     } else{
-        return res.render('login', { cats: cats });
+        return res.render('signup', { cats: cats });
     }
 });
 
