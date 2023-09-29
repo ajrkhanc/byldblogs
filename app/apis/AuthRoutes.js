@@ -10,6 +10,7 @@ var Becomeaprofessionalcoach = require('../models/become-a-professional-coach');
 var CPassessmetscc = require ('../models/cp-assessment');
 var Bespokeass = require ('../models/bespoke-assessment');
 var DTCIAssessment = require ('../models/dtci-assessment');
+var NodeAssessment = require ('../models/node-assessment');
 var TRAiningAssessment = require ('../models/training-assessment');
 var ECFASsessment = require ('../models/efc-assessment');
 
@@ -411,6 +412,89 @@ apiRouter.get('/dtci-assessment', function (req, res) {
      apiRouter.get('/dtci-assessment/:username', function (req, res) {
       // get all posts from database
       DTCIAssessment.find({
+        newnameurl: req.params.username
+      }, function (err, posts) {
+        if (err) {
+          res.status(500).json({
+            error: 'Could not retrieve posts'
+          });
+        }
+        else {
+          posts = posts.reverse();
+          res.json(posts);
+        }
+      });
+    });
+
+// Node Assessement
+apiRouter.route('/node-assessment/')
+.post(function (req, res) {
+  console.log(req.body)
+  Post.findOne({ url: req.body.posturl }, function (err, post) {
+    if (err) { console.log(err) }
+    var NodeAssessment = new NodeAssessment({       
+      q1: req.body.q1,
+      q2: req.body.q2,
+      q3: req.body.q3,
+      q4: req.body.q4,
+      q5: req.body.q5,
+      q6: req.body.q6,
+      q7: req.body.q7,
+      q8: req.body.q8,
+      q9: req.body.q9,
+      q10: req.body.q10,
+      q11: req.body.q11,
+      q12: req.body.q12,
+      q13: req.body.q13,
+      q14: req.body.q14,
+      q15: req.body.q15,
+      q16: req.body.q16,
+      q17: req.body.q17,
+      q18: req.body.q18,
+      q19: req.body.q19,
+      q20: req.body.q20,
+      name:req.body.name,
+      email:req.body.email,
+      phone:req.body.phone,
+      organization:req.body.organization,
+      newnameurl:req.body.newnameurl
+
+    });
+    NodeAssessment.findOne({ email: req.body.email }, function (err, existingDoc) {
+      if (existingDoc) {
+        return res.json({ message: 'Email is already registered', status: 1 });
+      } else {
+        NodeAssessment.save(function (err) {
+          if (err) {
+            console.log(err)
+          } else {
+            return res.json({ message: 'Fetching your result', status: 0 });
+          }
+        });
+      }
+    });
+  });
+});
+
+// NodeAssessment Assessment result
+apiRouter.get('/node-assessment', function (req, res) {
+  NodeAssessment.find({}, function (err, categories) {
+    if (err) {
+      res.status(500).json({
+        error: 'Could not retrieve categories'
+      });
+    }
+    else {
+      categories = categories.reverse()
+      res.json(categories);
+    }
+  });
+});
+
+     // NodeAssessment Assessment result by user
+     apiRouter.get('/node-assessment/:username', function (req, res) {
+      // get all posts from database
+      NodeAssessment.find({
         newnameurl: req.params.username
       }, function (err, posts) {
         if (err) {
