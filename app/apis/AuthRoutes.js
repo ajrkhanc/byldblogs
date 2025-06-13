@@ -1068,22 +1068,46 @@ apiRouter.get('/node-assessment', function (req, res) {
           email: req.body.username
         }
       }
-      User.findOne(jsob).select('email password name bio Role imageURL username Social').exec(function (err, user) {
-        if (!user) {
-          return res.status(404).json({ message: 'User not found.' });
-        }
+      // User.findOne(jsob).select('email password name bio Role imageURL username Social').exec(function (err, user) {
+      //   if (!user) {
+      //     return res.status(404).json({ message: 'User not found.' });
+      //   }
 
-        if (!user.comparePassword(req.body.password)) {
-          return res.status(406).json({ message: 'Wrong Password' });
-        }
-        var token = jwt.sign(user, config.superSecret, {
-          expiresIn: '24 days'
-        });
-        res.cookie('token', token, { httpOnly: true });
-        user.password = null;
-        res.cookie('decoded', { _doc: user }, { httpOnly: true });
-        return res.json({ message: 'LoggedIn' });// replaced with redirect
+      //   if (!user.comparePassword(req.body.password)) {
+      //     return res.status(406).json({ message: 'Wrong Password' });
+      //   }
+      //   var token = jwt.sign(user, config.superSecret, {
+      //     expiresIn: '24 days'
+      //   });
+      //   res.cookie('token', token, { httpOnly: true });
+      //   user.password = null;
+      //   res.cookie('decoded', { _doc: user }, { httpOnly: true });
+      //   return res.json({ message: 'LoggedIn' });// replaced with redirect
+      // });
+
+
+      User.findOne(jsob).select('email password name bio Role imageURL username Social').exec(function (err, user) {
+      if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+      }
+
+      if (!user.comparePassword(req.body.password)) {
+        return res.status(406).json({ message: 'Wrong Password' });
+      }
+
+      const plainUser = user.toObject(); // ✅ convert mongoose doc to plain object
+      delete plainUser.password;
+
+      const token = jwt.sign(plainUser, config.superSecret, {
+        expiresIn: '24 days'
       });
+
+      res.cookie('token', token, { httpOnly: true });
+      res.cookie('decoded', plainUser, { httpOnly: true }); // ✅ No _doc now
+      return res.json({ message: 'LoggedIn' });
+    });
+
+
     });
 
   apiRouter.route('/logout')
@@ -1106,9 +1130,19 @@ apiRouter.get('/node-assessment', function (req, res) {
     });
   });
 
-  apiRouter.get('/profile', function (req, res) {
-    res.json({ user: req.decoded._doc });
-  });
+  // apiRouter.get('/profile', function (req, res) {
+  //   res.json({ user: req.decoded._doc });
+  // });
+
+    apiRouter.get('/profile', function (req, res) {
+      if (!req.decoded || !req.decoded._doc) {
+        return res.status(401).json({ message: 'Unauthorized or invalid token' });
+      }
+        res.json({ user: req.decoded._doc });
+  })
+
+
+
   apiRouter.get('/', function (req, res) {
     res.json(req.decoded);
   });
