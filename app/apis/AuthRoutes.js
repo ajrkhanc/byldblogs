@@ -1142,7 +1142,7 @@ apiRouter.get('/node-assessment', function (req, res) {
   })
 
 
-
+~
   apiRouter.get('/', function (req, res) {
     res.json(req.decoded);
   });
