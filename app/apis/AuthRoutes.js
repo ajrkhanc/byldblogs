@@ -787,41 +787,47 @@ module.exports = function (express) {
       await assessment.save();
 
       res.status(201).json({ message: "Fetching your result", status: 0 });
+      res
+        .status(200)
+        .json({ message: "Assessment saved successfully", status: 0 });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Server error", error: err.message });
     }
   });
 
- // coach knowledge assessment result
+  // coach knowledge assessment result
 
-   apiRouter.get('/coach-knowledge-assessment', async (req, res) => {
-  try {
-    const results = await CoachKnowledgeAssessment.find().sort({ created_at: -1 });
-    res.json(results);
-  } catch (err) {
-    res.status(500).json({ error: 'Could not retrieve assessments' });
-  }
-});
+  apiRouter.get("/coach-knowledge-assessment", async (req, res) => {
+    try {
+      const results = await CoachKnowledgeAssessment.find().sort({
+        created_at: -1,
+      });
+      res.json(results);
+    } catch (err) {
+      res.status(500).json({ error: "Could not retrieve assessments" });
+    }
+  });
 
   // coach knowledge assessment result by user
 
+  apiRouter.get("/coach-knowledge-assessment/:username", async (req, res) => {
+    try {
+      const results = await CoachKnowledgeAssessment.find({
+        newnameurl: req.params.username,
+      }).sort({ created_at: -1 });
 
- apiRouter.get('/coach-knowledge-assessment/:username', async (req, res) => {
-  try {
-    const results = await CoachKnowledgeAssessment.find({ newnameurl: req.params.username }).sort({ created_at: -1 });
+      if (results.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "No results found for this user" });
+      }
 
-    if (results.length === 0) {
-      return res.status(404).json({ message: 'No results found for this user' });
+      res.json(results);
+    } catch (err) {
+      res.status(500).json({ error: "Could not retrieve results for user" });
     }
-
-    res.json(results);
-  } catch (err) {
-    res.status(500).json({ error: 'Could not retrieve results for user' });
-  }
-});
-
-
+  });
 
   // get all categories
   apiRouter.get("/categories", function (req, res) {
