@@ -786,9 +786,8 @@ module.exports = function (express) {
       const assessment = new CoachKnowledgeAssessment(assessmentData);
       await assessment.save();
 
-      res.status(201).json({ message: "Fetching your result", status: 0 });
       res
-        .status(200)
+        .status(201)
         .json({ message: "Assessment saved successfully", status: 0 });
     } catch (err) {
       console.error(err);
