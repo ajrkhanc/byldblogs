@@ -14,6 +14,7 @@ var DTCIAssessment = require("../models/dtci-assessment");
 var NodeAssessment = require("../models/node-assessment");
 var TRAiningAssessment = require("../models/training-assessment");
 var ECFASsessment = require("../models/efc-assessment");
+var DiscSeries = require("../models/disc-series");
 
 var cors = require("cors");
 const formidable = require("formidable");
@@ -756,6 +757,75 @@ module.exports = function (express) {
       }
     );
   });
+
+
+    // Disc Series submission
+  apiRouter.post("/disc-series/", async (req, res) => {
+    try {
+      // Email check
+      const existingDoc = await DiscSeries.findOne({
+        email: req.body.email,
+      });
+      if (existingDoc) {
+        return res.json({ message: "Email is already registered", status: 1 });
+      }
+       
+      let discSeriesData = {};
+      for (let i = 1; i <= 10; i++) {
+        discSeriesData[`q${i}`] = req.body[`q${i}`];
+      }
+      
+      // Other required fields
+      discSeriesData.name = req.body.name;
+      discSeriesData.email = req.body.email;
+      discSeriesData.phone = req.body.phone;
+      discSeriesData.organization = req.body.organization;
+      discSeriesData.newnameurl = req.body.newnameurl;
+
+      // Create and save
+      const discSeries = new DiscSeries(discSeriesData);
+      await discSeries.save();
+
+      res
+        .status(201)
+        .json({ message: "Disc Series saved successfully", status: 0 });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  });
+
+  // Disc Series result
+
+  apiRouter.get("/disc-series", async (req, res) => {
+    try {
+      const results = await DiscSeries.find().sort({ created_at: -1 });
+      res.json(results);
+    } catch (err) {
+      res.status(500).json({ error: "Could not retrieve disc series submissions" });
+    }
+  });
+
+  // Disc Series result by user
+
+  apiRouter.get("/disc-series/:username", async (req, res) => {
+    try {
+      const results = await DiscSeries.find({
+        newnameurl: req.params.username,
+      }).sort({ created_at: -1 });
+
+      if (results.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "No results found for this user" });
+      }
+
+      res.json(results);
+    } catch (err) {
+      res.status(500).json({ error: "Could not retrieve results for user" });
+    }
+  });
+
 
   // coach knowledge assessment
 
